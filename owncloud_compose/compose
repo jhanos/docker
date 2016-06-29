@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  web:
+    image: nginx-alpine
+    volumes:
+      - owncloud-data:/var/www/owncloud/data
+    networks:
+      - front
+      - middle
+   php-fpm:
+    image: fpm-alpine
+    networks:
+      - middle
+      - back
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - back
+
+volumes:
+  postgres-data:
+  owncloud-data:
+
+networks:
+  front:
+  middle:
+  back:
