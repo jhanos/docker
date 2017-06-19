@@ -1,0 +1,38 @@
+version: "2"
+
+services:
+  nginx:
+    build: ./nginx
+    volumes_from:
+      - fpm
+    ports:
+      - 32812:80
+    networks:
+      - front
+      - middle
+    depends_on:
+      - fpm
+  fpm:
+    build: ./fpm
+    networks:
+      - middle
+      - back
+    volumes:
+      - /var/nextcloud:/var/www/nextcloud/data
+  database:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - back
+    environment:
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+volumes:
+  postgres-data:
+
+networks:
+  front:
+  middle:
+  back:
